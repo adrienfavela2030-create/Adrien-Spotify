@@ -15,7 +15,8 @@ local songs = {
 	"Do that thang",
 	"Unamed EDM",
 	"Big guy",
-	"It's raining tacos"
+	"It's raining tacos",
+	"Macarena"
 }
 
 local ids = {
@@ -27,7 +28,8 @@ local ids = {
 	["Do that thang"] = "rbxassetid://87444008651767",
 	["Unamed EDM"] = "rbxassetid://71388243586169",
 	["Big guy"] = "rbxassetid://84677981674776",
-	["It's raining tacos"] = "rbxassetid://142376088"
+	["It's raining tacos"] = "rbxassetid://142376088",
+	["Macarena"] = "rbxassetid://93497396408206"
 }
 
 local index = 1
