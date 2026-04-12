@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
-local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
 
@@ -12,7 +11,11 @@ local songs = {
 	"OMFG",
 	"EEYuh",
 	"Low Cortisol",
-	"My Granny Got Hit By A Bazooka"
+	"My Granny Got Hit By A Bazooka",
+	"Push the feeling",
+	"Do that thang",
+	"Unamed EDM",
+	"Big guy"
 }
 
 local ids = {
@@ -20,7 +23,11 @@ local ids = {
 	["OMFG"] = "rbxassetid://110788401793874",
 	["EEYuh"] = "rbxassetid://16190782181",
 	["Low Cortisol"] = "rbxassetid://110919391228823",
-	["My Granny Got Hit By A Bazooka"] = "rbxassetid://121252909004354"
+	["My Granny Got Hit By A Bazooka"] = "rbxassetid://121252909004354",
+	["Push the feeling"] = "rbxassetid://139601415006173",
+	["Do that thang"] = "rbxassetid://87444008651767",
+	["Unamed EDM"] = "rbxassetid://71388243586169",
+	["Big guy"] = "rbxassetid://84677981674776"
 }
 
 local index = 1
@@ -34,9 +41,11 @@ sound.Volume = 0.7
 sound.Parent = SoundService
 
 ------------------------------------------------
--- UI
+-- GUI (FIXED RESET)
 ------------------------------------------------
 local gui = Instance.new("ScreenGui")
+gui.Name = "AdrienSpotify"
+gui.ResetOnSpawn = false -- 🔥 IMPORTANT FIX
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
@@ -48,7 +57,7 @@ frame.Parent = gui
 Instance.new("UICorner", frame)
 
 ------------------------------------------------
--- TITLE (BIG)
+-- TITLE
 ------------------------------------------------
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1,0,0,50)
@@ -60,7 +69,7 @@ title.TextSize = 30
 title.Parent = frame
 
 ------------------------------------------------
--- CURRENT SONG
+-- NOW PLAYING
 ------------------------------------------------
 local nowPlaying = Instance.new("TextLabel")
 nowPlaying.Size = UDim2.new(1,0,0,30)
@@ -90,7 +99,7 @@ local function playSong(i)
 end
 
 ------------------------------------------------
--- PLAY/PAUSE
+-- PLAY / PAUSE
 ------------------------------------------------
 local playBtn = Instance.new("TextButton")
 playBtn.Size = UDim2.new(0.4,0,0,45)
@@ -112,7 +121,7 @@ playBtn.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------
--- SKIP (FIXED)
+-- SKIP
 ------------------------------------------------
 local skipBtn = Instance.new("TextButton")
 skipBtn.Size = UDim2.new(0.25,0,0,45)
