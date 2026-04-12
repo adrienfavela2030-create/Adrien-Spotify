@@ -1,180 +1,236 @@
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
 ------------------------------------------------
--- SONGS
+-- GUI
 ------------------------------------------------
-local songs = {
-	"Minecraft Music",
-	"OMFG",
-	"EEYuh",
-	"Low Cortisol",
-	"My Granny Got Hit By A Bazooka",
-	"Do that thang",
-	"Unamed EDM",
-	"Big guy",
-	"It's raining tacos",
-	"Macarena"
-}
-
-local ids = {
-	["Minecraft Music"] = "rbxassetid://130672051659118",
-	["OMFG"] = "rbxassetid://110788401793874",
-	["EEYuh"] = "rbxassetid://16190782181",
-	["Low Cortisol"] = "rbxassetid://110919401228823",
-	["My Granny Got Hit By A Bazooka"] = "rbxassetid://121252909004354",
-	["Do that thang"] = "rbxassetid://87444008651767",
-	["Unamed EDM"] = "rbxassetid://71388243586169",
-	["Big guy"] = "rbxassetid://84677981674776",
-	["It's raining tacos"] = "rbxassetid://142376088",
-	["Macarena"] = "rbxassetid://93497396408206"
-}
-
-local index = 1
-local playing = false
+local gui = Instance.new("ScreenGui")
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = playerGui
 
 ------------------------------------------------
 -- SOUND
 ------------------------------------------------
 local sound = Instance.new("Sound")
 sound.Volume = 0.7
+sound.PlaybackSpeed = 1
 sound.Parent = SoundService
 
 ------------------------------------------------
--- GUI (FIXED RESET)
+-- SIMPLE BASS EFFECT
 ------------------------------------------------
-local gui = Instance.new("ScreenGui")
-gui.Name = "AdrienSpotify"
-gui.ResetOnSpawn = false -- 🔥 IMPORTANT FIX
-gui.Parent = player:WaitForChild("PlayerGui")
+local eq = Instance.new("EqualizerSoundEffect")
+eq.LowGain = 0
+eq.MidGain = 0
+eq.HighGain = 0
+eq.Parent = sound
 
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 500, 0, 320)
-frame.Position = UDim2.new(0.5, -250, 0.5, -160)
-frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
-frame.Visible = false
-frame.Parent = gui
-Instance.new("UICorner", frame)
+------------------------------------------------
+-- SONGS
+------------------------------------------------
+local songs = {
+	"Minecraft Music","OMFG","EEYuh","Low Cortisol",
+	"My Granny Got Hit By A Bazooka","Do that thang",
+	"Unamed EDM","Big guy","It's raining tacos","Macarena"
+}
+
+local ids = {
+	["Minecraft Music"]="rbxassetid://130672051659118",
+	["OMFG"]="rbxassetid://110788401793874",
+	["EEYuh"]="rbxassetid://16190782181",
+	["Low Cortisol"]="rbxassetid://110919228823",
+	["My Granny Got Hit By A Bazooka"]="rbxassetid://121252909004354",
+	["Do that thang"]="rbxassetid://87444008651767",
+	["Unamed EDM"]="rbxassetid://71388243586169",
+	["Big guy"]="rbxassetid://84677981674776",
+	["It's raining tacos"]="rbxassetid://142376088",
+	["Macarena"]="rbxassetid://93497396408206"
+}
+
+local index = 1
+
+local function playSong(i)
+	index = i
+	sound.SoundId = ids[songs[i]]
+	sound.TimePosition = 0
+	sound:Play()
+end
+
+------------------------------------------------
+-- OPEN BUTTON
+------------------------------------------------
+local open = Instance.new("TextButton")
+open.Size = UDim2.new(0, 54, 0, 54)
+open.Position = UDim2.new(0, 241, 0, 12)
+
+open.Text = "🎵"
+open.TextSize = 26
+open.Font = Enum.Font.GothamBold
+open.TextColor3 = Color3.fromRGB(255,255,255)
+
+open.BackgroundColor3 = Color3.fromRGB(20,20,20)
+open.BorderSizePixel = 0
+open.Parent = gui
+
+Instance.new("UICorner", open)
+
+------------------------------------------------
+-- MAIN MENU
+------------------------------------------------
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 560, 0, 440)
+main.Position = UDim2.new(0.5,0,0.5,0)
+main.AnchorPoint = Vector2.new(0.5,0.5)
+
+main.BackgroundColor3 = Color3.fromRGB(12,12,12)
+main.Visible = false
+main.Parent = gui
+
+Instance.new("UICorner", main)
 
 ------------------------------------------------
 -- TITLE
 ------------------------------------------------
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1,0,0,50)
-title.BackgroundTransparency = 1
+title.Size = UDim2.new(1,0,0,55)
 title.Text = "Adrien’s Spotify"
-title.TextColor3 = Color3.fromRGB(30,215,96)
+title.TextSize = 28
 title.Font = Enum.Font.GothamBold
-title.TextSize = 30
-title.Parent = frame
+title.TextColor3 = Color3.fromRGB(30,215,96)
+title.BackgroundTransparency = 1
+title.Parent = main
 
 ------------------------------------------------
--- NOW PLAYING
+-- SONG LIST
 ------------------------------------------------
-local nowPlaying = Instance.new("TextLabel")
-nowPlaying.Size = UDim2.new(1,0,0,30)
-nowPlaying.Position = UDim2.new(0,0,0,55)
-nowPlaying.BackgroundTransparency = 1
-nowPlaying.TextColor3 = Color3.fromRGB(255,255,255)
-nowPlaying.Font = Enum.Font.Gotham
-nowPlaying.TextSize = 22
-nowPlaying.Text = "Not playing"
-nowPlaying.Parent = frame
+local list = Instance.new("ScrollingFrame")
+list.Size = UDim2.new(0.58, -10, 1, -70)
+list.Position = UDim2.new(0, 10, 0, 60)
 
-------------------------------------------------
--- PLAY FUNCTION
-------------------------------------------------
-local function playSong(i)
-	index = i
-	local name = songs[index]
-	local id = ids[name]
+list.CanvasSize = UDim2.new(0,0,0,#songs*46)
+list.ScrollBarThickness = 6
+list.BackgroundColor3 = Color3.fromRGB(18,18,18)
+list.Parent = main
 
-	sound.SoundId = id
-	sound:Stop()
-	sound.TimePosition = 0
-	sound:Play()
-	playing = true
+Instance.new("UICorner", list)
 
-	nowPlaying.Text = "Now Playing: " .. name
+local layout = Instance.new("UIListLayout", list)
+layout.Padding = UDim.new(0,6)
+
+for i,v in ipairs(songs) do
+	local b = Instance.new("TextButton")
+	b.Size = UDim2.new(1,-10,0,42)
+	b.Text = "▶ "..v
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 18
+	b.TextColor3 = Color3.fromRGB(255,255,255)
+	b.BackgroundColor3 = Color3.fromRGB(35,35,35)
+	b.Parent = list
+	Instance.new("UICorner", b)
+
+	b.MouseButton1Click:Connect(function()
+		playSong(i)
+	end)
 end
 
 ------------------------------------------------
--- PLAY / PAUSE
+-- CONTROLS
 ------------------------------------------------
-local playBtn = Instance.new("TextButton")
-playBtn.Size = UDim2.new(0.4,0,0,45)
-playBtn.Position = UDim2.new(0.05,0,0.75,0)
-playBtn.Text = "PLAY / PAUSE"
-playBtn.TextSize = 22
-playBtn.BackgroundColor3 = Color3.fromRGB(30,215,96)
-playBtn.Parent = frame
-Instance.new("UICorner", playBtn)
+local controls = Instance.new("Frame")
+controls.Size = UDim2.new(0.38,0,1,-70)
+controls.Position = UDim2.new(0.6,0,0,60)
+controls.BackgroundColor3 = Color3.fromRGB(18,18,18)
+controls.Parent = main
 
-playBtn.MouseButton1Click:Connect(function()
-	if playing then
-		sound:Pause()
-		playing = false
-	else
-		sound:Play()
-		playing = true
+Instance.new("UICorner", controls)
+
+------------------------------------------------
+-- SLIDER (FIXED INPUT)
+------------------------------------------------
+local function slider(name, y, default, callback)
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1,-20,0,18)
+	label.Position = UDim2.new(0,10,0,y)
+	label.Text = name
+	label.TextColor3 = Color3.fromRGB(255,255,255)
+	label.BackgroundTransparency = 1
+	label.Font = Enum.Font.GothamBold
+	label.TextSize = 14
+	label.Parent = controls
+
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.new(0.9,0,0,6)
+	bar.Position = UDim2.new(0.05,0,0,y+20)
+	bar.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	bar.Parent = controls
+	Instance.new("UICorner", bar)
+
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.new(default,0,1,0)
+	fill.BackgroundColor3 = Color3.fromRGB(30,215,96)
+	fill.Parent = bar
+	Instance.new("UICorner", fill)
+
+	local dragging = false
+
+	local function set(x)
+		local p = math.clamp((x - bar.AbsolutePosition.X) / bar.AbsoluteSize.X,0,1)
+		fill.Size = UDim2.new(p,0,1,0)
+		callback(p)
 	end
+
+	bar.InputBegan:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.MouseButton1
+		or i.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			set(i.Position.X)
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(i)
+		if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement
+		or i.UserInputType == Enum.UserInputType.Touch) then
+			set(i.Position.X)
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.MouseButton1
+		or i.UserInputType == Enum.UserInputType.Touch then
+			dragging = false
+		end
+	end)
+end
+
+------------------------------------------------
+-- SLIDERS
+------------------------------------------------
+
+-- Volume
+slider("Volume", 25, 0.7, function(v)
+	sound.Volume = v
+end)
+
+-- Speed
+slider("Speed", 95, 0.5, function(v)
+	sound.PlaybackSpeed = 0.3 + (v * 1.7)
+end)
+
+-- BASS (NEW)
+slider("Bass", 165, 0.5, function(v)
+	eq.LowGain = (v * 24) - 12
+	eq.MidGain = (v * 6) - 3
+	eq.HighGain = (v * -6)
 end)
 
 ------------------------------------------------
--- SKIP
+-- TOGGLE MENU
 ------------------------------------------------
-local skipBtn = Instance.new("TextButton")
-skipBtn.Size = UDim2.new(0.25,0,0,45)
-skipBtn.Position = UDim2.new(0.5,0,0.75,0)
-skipBtn.Text = "SKIP"
-skipBtn.TextSize = 22
-skipBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
-skipBtn.Parent = frame
-Instance.new("UICorner", skipBtn)
-
-skipBtn.MouseButton1Click:Connect(function()
-	index += 1
-	if index > #songs then
-		index = 1
-	end
-	playSong(index)
-end)
-
-------------------------------------------------
--- BACK
-------------------------------------------------
-local backBtn = Instance.new("TextButton")
-backBtn.Size = UDim2.new(0.25,0,0,45)
-backBtn.Position = UDim2.new(0.75,0,0.75,0)
-backBtn.Text = "BACK"
-backBtn.TextSize = 22
-backBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
-backBtn.Parent = frame
-Instance.new("UICorner", backBtn)
-
-backBtn.MouseButton1Click:Connect(function()
-	index -= 1
-	if index < 1 then
-		index = #songs
-	end
-	playSong(index)
-end)
-
-------------------------------------------------
--- OPEN BUTTON
-------------------------------------------------
-local openBtn = Instance.new("TextButton")
-openBtn.Size = UDim2.new(0,160,0,40)
-openBtn.Position = UDim2.new(0.5,-80,0.9,0)
-openBtn.Text = "Music"
-openBtn.TextSize = 20
-openBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-openBtn.TextColor3 = Color3.fromRGB(30,215,96)
-openBtn.Parent = gui
-Instance.new("UICorner", openBtn)
-
-openBtn.MouseButton1Click:Connect(function()
-	frame.Visible = not frame.Visible
+open.MouseButton1Click:Connect(function()
+	main.Visible = not main.Visible
 end)
