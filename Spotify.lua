@@ -15,10 +15,7 @@ local songs = {
 	"Do that thang",
 	"Unamed EDM",
 	"Big guy",
-	"It's raining tacos",
-
-	"Montagem xonada",
-	"I like the way you kiss me"
+	"It's raining tacos"
 }
 
 local ids = {
@@ -30,12 +27,8 @@ local ids = {
 	["Do that thang"] = "rbxassetid://87444008651767",
 	["Unamed EDM"] = "rbxassetid://71388243586169",
 	["Big guy"] = "rbxassetid://84677981674776",
-	["It's raining tacos"] = "rbxassetid://142376088",
-
-	["Montagem xonada"] = "rbxassetid://112820802253117",
-	["I like the way you kiss me"] = "rbxassetid://121052103423342"
+	["It's raining tacos"] = "rbxassetid://142376088"
 }
-
 
 local index = 1
 local playing = false
