@@ -12,23 +12,30 @@ local songs = {
 	"EEYuh",
 	"Low Cortisol",
 	"My Granny Got Hit By A Bazooka",
-	"Push the feeling",
 	"Do that thang",
 	"Unamed EDM",
-	"Big guy"
+	"Big guy",
+
+	"Fall from the sky",
+	"Chicken Dihhh",
+	"It's raining tacos"
 }
 
 local ids = {
 	["Minecraft Music"] = "rbxassetid://130672051659118",
 	["OMFG"] = "rbxassetid://110788401793874",
 	["EEYuh"] = "rbxassetid://16190782181",
-	["Low Cortisol"] = "rbxassetid://110919391228823",
+	["Low Cortisol"] = "rbxassetid://110919401228823",
 	["My Granny Got Hit By A Bazooka"] = "rbxassetid://121252909004354",
-	["Push the feeling"] = "rbxassetid://139601415006173",
 	["Do that thang"] = "rbxassetid://87444008651767",
 	["Unamed EDM"] = "rbxassetid://71388243586169",
-	["Big guy"] = "rbxassetid://84677981674776"
+	["Big guy"] = "rbxassetid://84677981674776",
+
+	["Fall from the sky"] = "rbxassetid://115590187881251",
+	["Chicken Dihhh"] = "rbxassetid://132734127940213",
+	["It's raining tacos"] = "rbxassetid://142376088"
 }
+
 
 local index = 1
 local playing = false
